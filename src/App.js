@@ -19,10 +19,7 @@ const App = () => {
       })
   }, [])
 
-
-  const onChangeNote = e => {
-    setNewNote(e.target.value)
-  }
+  const onChangeNote = e => setNewNote(e.target.value)
 
   const onSubmitAddNote = (e) => {
     e.preventDefault();
@@ -34,16 +31,16 @@ const App = () => {
 
     noteService 
     .create(noteObject)
-    .then(returnedNote => {
-      setNotes(notes.concat(returnedNote.data))
-      setShowAll(false)
-      setNewNote('')
-      noteService
-      .getAll()
-      .then(response => {
-        setNotes(response)
+      .then(returnedNote => {
+        // setNotes(notes.concat(returnedNote.data))
+        noteService
+        .getAll()
+        .then(response => {
+          setNotes(response)
+        })
+        setShowAll(false)
+        setNewNote('')
       })
-    })
   }
 
   const toggleImportanceOf = id => {
@@ -51,26 +48,31 @@ const App = () => {
     const changedNote = { ...note, important: !note.important }
 
     noteService
-      .update(changedNote).then(returnedNote => {
-        setNotes(notes.map(note => note.id !== id ? note : returnedNote))
-      })
-      .catch(error => {
-        setErrorMessage(
-          `Note '${note.content}' was already removed from server`
-        )
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-        setNotes(notes.filter(n => n.id !== id))
-      })
+      .update(note.id, changedNote)
+        .then(returnedNote => {
+          // setNotes(notes.map(note => note.id !== id ? note : returnedNote))
+          noteService
+            .getAll()
+              .then(notes => {
+                setNotes(notes)
+              })
+          })
+        .catch(error => {
+          setErrorMessage(
+            `Note '${note.content}' was already removed from server`
+          )
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+          setNotes(notes.filter(n => n.id !== id))
+        })
   }
 
   const filter = notes.filter(note => {
     return (
-      showAll ?
-        note.important === showAll
-      :
-        note.important === true || note.important === false
+      showAll 
+      ? note.important === showAll
+      : note.important === true || note.important === false
     )
   })
 
