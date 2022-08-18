@@ -17,6 +17,8 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
+  console.log({ user })
+
   useEffect(() => {
     noteService
       .getAll()
@@ -133,6 +135,26 @@ const App = () => {
         : 
           <div>
             <p>{user.name} logged in</p>
+            <div>
+              <div>
+                <button onClick={() => setShowAll(!showAll)}>
+                  show {!showAll ? 'important' : 'all' }
+                </button>
+              </div>      
+              <ul>
+                {
+                  <>
+                    {filter.map((note, i) => 
+                      <Note
+                        key={i}
+                        note={note} 
+                        toggleImportance={() => toggleImportanceOf(note.id)}
+                      />
+                    )} 
+                  </>
+                }
+              </ul>
+            </div>
             <NoteForm 
               addNote = { addNote }
               newNote = { newNote }
@@ -140,27 +162,6 @@ const App = () => {
             />
           </div>
       }
-
-      <div>
-        <div>
-          <button onClick={() => setShowAll(!showAll)}>
-            show {!showAll ? 'important' : 'all' }
-          </button>
-        </div>      
-        <ul>
-          {
-            <>
-              {filter.map((note, i) => 
-                <Note
-                  key={i}
-                  note={note} 
-                  toggleImportance={() => toggleImportanceOf(note.id)}
-                />
-              )} 
-            </>
-          }
-        </ul>
-      </div>
       <Footer />
     </>
   )
