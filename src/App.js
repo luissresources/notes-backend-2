@@ -121,11 +121,12 @@ const App = () => {
       </div>
       <ul>
         {notesToShow.map(note =>
-          <Note
-            key={note.id}
-            note={note}
-            toggleImportance={() => toggleImportanceOf(note.id)}
-          />
+          <div key={Math.random()*100}>
+            <Note
+              note={note}
+              toggleImportance={() => toggleImportanceOf(note.id)}
+            />
+          </div>
         )}
       </ul>
 
